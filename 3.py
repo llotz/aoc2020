@@ -1,6 +1,4 @@
 lines = open("3in.txt", "r").read().split("\n")
-highest = 0
-takenseats = []
 
 row = 0
 col = 0
