@@ -1,7 +1,7 @@
 import os
 import re
 
-rules = open("7in.txt", "r").readlines()
+rules = open("7in.txt", "r").read().split('\n')
 result = 0
 
 bags = {}
@@ -21,24 +21,25 @@ for rule in rules:
 def search(search):
 	hits = 0
 	for bag in bags:
-		if bag == search:
-			hits += 1
-		else:
-			if deepsearch(bags[bag][0], search) > 0:
+		for containedbag in bags[bag]:
+			if containedbag[0] == search:
 				hits += 1
+			else:
+				if deepsearch(containedbag[0], search) > 0:
+					hits += 1
 	return hits
 
 def deepsearch(bagname, search):
 	hits = 0
-	for bag in bags[bagname]:
-		if search == bag[0]:
-			hits += 1
+	if len(bags[bagname]) == 0:
+		return hits
+		for containedbag in bags[bagname]:
+			if containedbag[0] == search:
+				hits += 1
+			else:
+				if deepsearch(containedbag[0], search) > 0:
+					hits += 1
 	return hits
 
 
-search("shiny gold bag")
-
-
-
-
-print(result)
+print(search("shiny gold bag"))
