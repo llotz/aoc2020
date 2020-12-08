@@ -5,7 +5,6 @@ rules = open("7in.txt", "r").read().split('\n')
 result = 0
 
 bags = {}
-containers = []
 
 for rule in rules:
 	contains = rule.replace(".", "").split("contain ")[1]
@@ -19,14 +18,11 @@ for rule in rules:
 		containedbags.append([subbagname, subbagcount])
 	bags[bagname] = containedbags
 
-#print(bags)
-
 def search(search):
 	hits = 0
 	for bag in bags:
 		for containedbag in bags[bag]:
 			if containedbag[0] == search:
-				addToContainers(bag)
 				hits += 1
 			else:
 				if deepsearch(containedbag[0], search) > 0:
@@ -34,23 +30,16 @@ def search(search):
 	return hits
 
 def deepsearch(bagname, search):
-	print("deepsearching:",bagname)
 	hits = 0
 	if len(bags[bagname]) == 0:
-		return 0
-	for containedbag in bags[bagname]:
-		if containedbag[0] == search:
-			addToContainers(bagname)
-			hits += 1
-		else:
-			if deepsearch(containedbag[0], search) > 0:
+		return hits
+		for containedbag in bags[bagname]:
+			if containedbag[0] == search:
 				hits += 1
+			else:
+				if deepsearch(containedbag[0], search) > 0:
+					hits += 1
 	return hits
 
-def addToContainers(bagname):
-	if bagname not in containers:
-		containers.append(bagname)
-		print(bagname)
 
 print(search("shiny gold bag"))
-print(len(containers))
