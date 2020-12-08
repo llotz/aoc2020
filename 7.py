@@ -28,13 +28,13 @@ def search(search):
 			if containedbag[0] == search:
 				addToContainers(bag)
 				hits += 1
-			else:
-				if deepsearch(containedbag[0], search) > 0:
-					hits += 1
+				break	
+		if deepsearch(containedbag[0], search) > 0:
+			hits += 1
 	return hits
 
 def deepsearch(bagname, search):
-	print("deepsearching:",bagname)
+	#print("deepsearching:",bagname)
 	hits = 0
 	if len(bags[bagname]) == 0:
 		return 0
