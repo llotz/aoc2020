@@ -42,9 +42,9 @@ def deepsearch(bagname, search):
 		if containedbag[0] == search:
 			addToContainers(bagname)
 			hits += 1
-		else:
-			if deepsearch(containedbag[0], search) > 0:
-				hits += 1
+			break
+		if deepsearch(containedbag[0], search) > 0:
+			hits += 1
 	return hits
 
 def addToContainers(bagname):
