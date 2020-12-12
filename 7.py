@@ -1,56 +1,54 @@
-import os
-import re
+import sys
+#sys.setrecursionlimit(5000)
 
-rules = open("7in.txt", "r").read().split('\n')
-result = 0
+lines = open("7in.txt").read().split('\n')
 
 bags = {}
-containers = []
+for line in lines:
+	l = line.split(" contain ")
+	bagname = l[0].replace(" bags", "")
+	contains = []
+	bags[bagname] = contains
+	if l[1].split(' ')[0] == "no":
+		continue
+	for c in l[1].split(','):
+		val = c.rstrip('.').rstrip(' bags').lstrip()
+		amount = val.split(" ")[0]
+		name = val[1:].strip()
+		contains.append(name)
 
-for rule in rules:
-	contains = rule.replace(".", "").split("contain ")[1]
-	bagname = rule.split("s contain")[0]
-	containedbags = []
-	for containedbag in contains.split(", "):
-		subbagcount = containedbag.split(" ")[0]
-		if subbagcount == "no":
-			continue
-		subbagname = " ".join(containedbag.split(" ")[1:]).rstrip("s")
-		containedbags.append([subbagname, subbagcount])
-	bags[bagname] = containedbags
+goldContainers = []
+doneContainers = []
 
-#print(bags)
+def addToGoldContainers(name):
+	if name not in goldContainers:
+		goldContainers.append(name)
 
-def search(search):
-	hits = 0
-	for bag in bags:
-		for containedbag in bags[bag]:
-			if containedbag[0] == search:
-				addToContainers(bag)
-				hits += 1
-				break	
-		if deepsearch(containedbag[0], search) > 0:
-			hits += 1
-	return hits
+def addToDoneContainers(name):
+	if name not in doneContainers:
+		doneContainers.append(name)
 
-def deepsearch(bagname, search):
-	#print("deepsearching:",bagname)
-	hits = 0
-	if len(bags[bagname]) == 0:
-		return 0
-	for containedbag in bags[bagname]:
-		if containedbag[0] == search:
-			addToContainers(bagname)
-			hits += 1
-			break
-		if deepsearch(containedbag[0], search) > 0:
-			hits += 1
-	return hits
+def search(k,s):
+	print("called",k)
+	occ = 0
+	if k in doneContainers:
+		return 0;
+	if k in bags:
+		if len(bags[k]) == 0:
+			addToDoneContainers(k)
+			return 0
 
-def addToContainers(bagname):
-	if bagname not in containers:
-		containers.append(bagname)
-		print(bagname)
-
-print(search("shiny gold bag"))
-print(len(containers))
+	for i in bags.keys():
+		for sub in bags[i]:
+			print(sub)
+			if sub == s:
+				addToDoneContainers(i)
+				addToGoldContainers(i)
+				occ += 1
+				print(i)
+			else:
+				if search(sub, s)>0:
+					addToDoneContainers(i)
+					addToGoldContainers(i)
+	return occ
+print(search("", "shiny gold"))
