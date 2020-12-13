@@ -23,6 +23,7 @@ doneContainers = []
 def addToGoldContainers(name):
 	if name not in goldContainers:
 		goldContainers.append(name)
+	addToDoneContainers(name)
 
 def addToDoneContainers(name):
 	if name not in doneContainers:
@@ -38,17 +39,21 @@ def search(k,s):
 			addToDoneContainers(k)
 			return 0
 
+# TODO: Didn't find done containers
 	for i in bags.keys():
 		for sub in bags[i]:
+			if sub in doneContainers:
+				continue;
 			print(sub)
 			if sub == s:
-				addToDoneContainers(i)
 				addToGoldContainers(i)
 				occ += 1
 				print(i)
 			else:
-				if search(sub, s)>0:
-					addToDoneContainers(i)
+				if search(sub, s) > 0:
+					occ += 1
 					addToGoldContainers(i)
-	return occ
+				else:
+					addToDoneContainers(i)
+				return occ
 print(search("", "shiny gold"))
