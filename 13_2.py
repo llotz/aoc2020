@@ -1,24 +1,30 @@
+import operator
+
 input = open("13in.txt").read().split("\n")
 busses = input[1].split(',')
+bussesNumOnly = [int(i) for i in input[1].replace("x,", "").split(',')]
 
 time = 1
 left = False
 
 res = 0
 
-while not left:
-	works = 0
-	#print(time)
-	for i in range(len(busses)):
-		if busses[i] == "x":
-			works += 1
-			continue
-		if (time+i) % int(busses[i]) == 0:
-			works += 1
-	if works == len(busses):
-		left = True
-		res = time
+values = {}
+for i,v in enumerate(busses):
+	if v.isnumeric():
+		values[int(v)]=int(i)
 
-	time += 1
+values = dict(sorted(values.items(), key=operator.itemgetter(1),reverse=True))
 
-print(res)
+print(values)
+
+runningProduct = 1
+add = 0
+
+for v in values:
+	while (add+values[v]) % int(v) != 0:
+		add += runningProduct
+	runningProduct *= int(v)
+	print("Sum so far:", add, "Product so far:", runningProduct)
+
+print(runningProduct, "|", add)
