@@ -5,16 +5,18 @@ print(numbers)
 amountspoken = {}  # number, spokentime
 lastspoken = {}  # number, turn
 listspoken = [] # continuing number list
+prevcache = {}
 
 turn = 0
-cachelast = 0
 
 while True:
 	turn += 1
+	lastNumber = 0
 	if turn <= len(numbers) and numbers[turn-1] not in lastspoken:
 		lastspoken[numbers[turn-1]] = turn
 		listspoken.append(numbers[turn-1])
 		amountspoken[numbers[turn-1]] = 1
+		lastNumber = numbers[turn-1]
 		print(numbers[turn-1])
 
 	# next number = lastnumber Turn - previous turn spoken
@@ -25,7 +27,7 @@ while True:
 		#print(lastNumber)
 		if amountspoken[lastNumber] > 1:
 			lastTurn = turn-1
-			prevTurn = len(listspoken) - 1 - listspoken[:-1][::-1].index(lastNumber)
+			prevTurn = prevcache[lastNumber]
 			nextNumber = lastTurn-prevTurn
 		lastspoken[nextNumber] = turn
 		listspoken.append(nextNumber)
@@ -33,7 +35,10 @@ while True:
 			amountspoken[nextNumber] = amountspoken[nextNumber]+1
 		else:
 			amountspoken[nextNumber] = 1
-
-		if turn == 2020:
-			print("sol:",nextNumber)
-			break;
+	
+	if turn > 1:
+		prevcache[listspoken[-2:][0]] = turn-1
+		#print(prevcache)
+	if turn == 30000000:
+		print("sol:",nextNumber)
+		break;
