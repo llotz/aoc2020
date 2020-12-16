@@ -19,14 +19,17 @@ for r in rawrules:
 	areas = [] # I guess this is necessary for the second task
 	for x in rulez:
 		boundz = [int(i) for i in x.split('-')]
+		boundz.append(category)
 		validAreas.append(boundz)
 
 print(tickets)
 print(validAreas)
 
-invalids = []
+validtickets = []
 
+# sort out invalid tickets
 for ticket in tickets:
+	tvalid = True
 	for val in ticket:
 		valid = False
 		for area in validAreas:
@@ -34,6 +37,20 @@ for ticket in tickets:
 				valid = True
 				break;
 		if not valid:
-			invalids.append(val)
+			tvalid = False
+	if tvalid:
+		validtickets.append(ticket)
 
-print(sum(invalids))
+print("valid:",validtickets)
+
+cols = len(myticket)
+rows = len(validtickets)
+
+colIds = {} #fieldName, column id
+
+for c in range(cols):
+	for r in range(rows):
+		#print(r,c)
+		field = validtickets[r][c]
+		# compare to validarea and if all columns are in range, this is the column of choice -> then log to colIds
+		#print(areas)
