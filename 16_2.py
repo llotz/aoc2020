@@ -1,7 +1,7 @@
 inp = open("16in.txt").read()
 
 rawrules = [i.rstrip("\n") for i in inp.split("your ticket:")[0].replace("\n\n", "").split("\n")]
-myticket = [i.rstrip("\n") for i in inp.split("your ticket:")[1].split("\n")[1].split(",")]
+myticket = [int(i.rstrip("\n")) for i in inp.split("your ticket:")[1].split("\n")[1].split(",")]
 rawtickets = [i.rstrip("\n") for i in inp.split("nearby tickets:")[1].split("\n")]
 
 tickets = []
@@ -52,10 +52,11 @@ rows = len(validtickets)
 print("cols:",cols, "rows:", rows)
 
 colIds = {} #fieldName, column id
-taken = []
 
 for c in range(cols):
 	for area in validAreas:
+		if area[4] in colIds:
+			continue
 		isAllInRange = True
 		for r in range(rows): #foreach row in column: is in range?
 			field = validtickets[r][c]
@@ -68,7 +69,16 @@ for c in range(cols):
 		# compare to validarea and if all columns are in range, this is the column of choice -> then log to colIds
 		if isAllInRange:
 			colIds[area[4]] = c
+			print(area[4],"is",c)
 			break
 		
+solution = 1
+
+for i in colIds:
+	if i.startswith("departure"):
+		print(myticket[colIds[i]])
+		solution *= myticket[colIds[i]]
 
 print(colIds)
+
+print(solution)
