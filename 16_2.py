@@ -19,8 +19,10 @@ for r in rawrules:
 	areas = [] # I guess this is necessary for the second task
 	for x in rulez:
 		boundz = [int(i) for i in x.split('-')]
-		boundz.append(category)
-		validAreas.append(boundz)
+		areas.append(boundz[0])
+		areas.append(boundz[1])
+	areas.append(category)
+	validAreas.append(areas)
 
 print(tickets)
 print(validAreas)
@@ -33,7 +35,7 @@ for ticket in tickets:
 	for val in ticket:
 		valid = False
 		for area in validAreas:
-			if area[0]<=int(val)<=area[1]:
+			if area[0]<=val<=area[1] or area[2]<=val<=area[3]:
 				valid = True
 				break;
 		if not valid:
@@ -42,15 +44,31 @@ for ticket in tickets:
 		validtickets.append(ticket)
 
 print("valid:",validtickets)
+print("areas:",validAreas)
 
 cols = len(myticket)
 rows = len(validtickets)
 
+print("cols:",cols, "rows:", rows)
+
 colIds = {} #fieldName, column id
+taken = []
 
 for c in range(cols):
-	for r in range(rows):
-		#print(r,c)
-		field = validtickets[r][c]
+	for area in validAreas:
+		isAllInRange = True
+		for r in range(rows): #foreach row in column: is in range?
+			field = validtickets[r][c]
+			if area[0]<=field<=area[1] or area[2]<=field<=area[3]:
+				print(r,c,"valid:",field,"in range:", area[0], area[1], "or", area[2], area[3])
+			else:
+				print(r,c,"not valid:",field,"in range:", area[0], area[1], "or", area[2], area[3])
+				isAllInRange = False
+				break
 		# compare to validarea and if all columns are in range, this is the column of choice -> then log to colIds
-		#print(areas)
+		if isAllInRange:
+			colIds[area[4]] = c
+			break
+		
+
+print(colIds)
